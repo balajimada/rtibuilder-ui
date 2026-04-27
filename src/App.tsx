@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
 function App() {
   const [firstName, setFirstName] = useState('')
   const [mobile, setMobile] = useState('')
@@ -8,27 +10,41 @@ function App() {
   const [to, setTo] = useState('')
   const [description, setDescription] = useState('')
   const [output, setOutput] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const generateContent = () => {
-    // Mock RTI draft generation
-    const mockRTI = `Subject: Request for Information under Right to Information Act, 2005
+  const generateContent = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_URL}/generate_rti`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          full_name: firstName,
+          mobile_number: mobile,
+          address: address,
+          authority: to,
+          description: description
+        }),
+      });
 
-Dear ${to},
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status} ${response.statusText}: ${errorText || 'No response body'}`);
+      }
 
-I, ${firstName}, residing at ${address}, hereby request the following information under the Right to Information Act, 2005:
-
-${description}
-
-Please provide the requested information within the stipulated time frame as per the RTI Act.
-
-Contact: ${mobile}
-
-Thank you.
-
-Regards,
-${firstName}
-${address}`
-    setOutput(mockRTI)
+      const data = await response.json();
+      const parsedOutput = typeof data === 'string'
+        ? data
+        : data.draft ?? data.rti_draft ?? data.content ?? JSON.stringify(data, null, 2);
+      setOutput(parsedOutput);
+    } catch (error) {
+      console.error('Error generating RTI content:', error instanceof Error ? error.message : error);
+      alert('Failed to generate RTI content. Please try again.');
+    } finally {
+      setLoading(false)
+    }
   }
 
   const copyToClipboard = () => {
@@ -45,17 +61,18 @@ ${address}`
           </div>
         </div>
         <form className="rti-form">
+          <p className="optional-note">All fields are optional; leave any blank if you prefer.</p>
           <div className="form-row">
             <div className="form-column">
               <h2>From Details</h2>
               <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName">Full Name</label>
                 <input
                   type="text"
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Enter your first name"
+                  placeholder="Enter your full name"
                 />
               </div>
               <div className="form-group">
@@ -82,7 +99,7 @@ ${address}`
             <div className="form-column">
               <h2>To Authority</h2>
               <div className="form-group">
-                <label htmlFor="to">Authority / Recipient</label>
+                <label htmlFor="to">Authority</label>
                 <input
                   type="text"
                   id="to"
@@ -104,8 +121,12 @@ ${address}`
                 rows={5}
               />
             </div>
-            <button type="button" onClick={generateContent} className="generate-btn">
-              Generate
+            <button type="button" onClick={generateContent} className="generate-btn" disabled={loading}>
+              {loading ? (
+                <>
+                  <span className="loader" /> Generating...
+                </>
+              ) : 'Generate'}
             </button>
           </div>
         </form>
