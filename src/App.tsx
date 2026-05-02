@@ -65,25 +65,27 @@ function App() {
           <div className="form-row">
             <div className="form-column">
               <h2>From Details</h2>
-              <div className="form-group">
-                <label htmlFor="firstName">Full Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="mobile">Mobile Number</label>
-                <input
-                  type="text"
-                  id="mobile"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  placeholder="Enter your mobile number"
-                />
+              <div className="inline-form-row">
+                <div className="form-group inline-field">
+                  <label htmlFor="firstName">Full Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div className="form-group inline-field">
+                  <label htmlFor="mobile">Mobile Number</label>
+                  <input
+                    type="text"
+                    id="mobile"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    placeholder="Enter your mobile number"
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="address">Address</label>

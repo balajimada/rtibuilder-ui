@@ -109,17 +109,21 @@ body {
   gap: 14px;
 }
 
-.form-group {
-  display: flex;
-  align-items: center;
+.inline-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+}
+
+.inline-field {
+  min-width: 0;
 }
 
 label {
   color: #d9c6f7;
   font-size: 0.95rem;
-  min-width: 120px;
-  text-align: right;
+  min-width: 0;
+  text-align: left;
 }
 
 input,
@@ -250,6 +254,10 @@ textarea {
 @media (max-width: 860px) {
   .form-row,
   .form-bottom {
+    grid-template-columns: 1fr;
+  }
+
+  .inline-form-row {
     grid-template-columns: 1fr;
   }
 
