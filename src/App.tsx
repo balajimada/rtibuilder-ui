@@ -52,11 +52,16 @@ function App() {
     alert('Copied to clipboard!')
   }
 
+  const printDraft = () => {
+    window.print()
+  }
+
   return (
     <div className="app">
       <div className="card">
         <div className="card-header">
           <div>
+            <p className="eyebrow">RTI Assistant</p>
             <h1>Right To Information - Content Builder</h1>
           </div>
         </div>
@@ -65,25 +70,27 @@ function App() {
           <div className="form-row">
             <div className="form-column">
               <h2>From Details</h2>
-              <div className="form-group">
-                <label htmlFor="firstName">Full Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="mobile">Mobile Number</label>
-                <input
-                  type="text"
-                  id="mobile"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  placeholder="Enter your mobile number"
-                />
+              <div className="inline-form-row">
+                <div className="form-group inline-field">
+                  <label htmlFor="firstName">Full Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div className="form-group inline-field">
+                  <label htmlFor="mobile">Mobile Number</label>
+                  <input
+                    type="text"
+                    id="mobile"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    placeholder="Enter your mobile number"
+                  />
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="address">Address</label>
@@ -139,9 +146,18 @@ function App() {
               rows={10}
               className="output-textarea"
             />
-            <button onClick={copyToClipboard} className="copy-btn">
-              Copy to Clipboard
-            </button>
+            <div className="output-actions">
+              <button onClick={copyToClipboard} className="copy-btn">
+                Copy to Clipboard
+              </button>
+              <button onClick={printDraft} className="print-btn">
+                Print Draft
+              </button>
+            </div>
+            <div className="print-draft" aria-hidden="true">
+              <h3>RTI Application Draft</h3>
+              <pre>{output}</pre>
+            </div>
           </div>
         )}
         <div className="note-section">
